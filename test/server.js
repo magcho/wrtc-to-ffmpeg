@@ -58,6 +58,12 @@ server.on('connection', function (socket) {
       command
         .addInput(input.url)
         .inputOptions(input.options)
+      // // .output('./out.mp4');
+      //   .outputOptions([
+      //     '-f flv',
+      //     '-flvflags no_duration_filesize'
+      //   ])
+      //   .addOutput(`rtmp://127.0.0.1:1935/live/livekey`)
     })
     outputs.forEach(output => {
       command
@@ -66,9 +72,23 @@ server.on('connection', function (socket) {
     })
     // command.addOutputOption('-vf transpose=2,transpose=2,format=yuv420p')
 
+    const input = inputs[0];
+    const command2 = ffmpeg();
+    command2
+      .addInput(input.url)
+      .inputOptions(input.options)
+      .outputOptions([
+        '-f flv',
+         '-flvflags no_duration_filesize'
+      ])
+      .output('rtmp://localhost:1935/live/test1')
+      .strem();
+
+
+
     command.on('stderr', (line) => {
-        console.log(line);
-      })
+      console.log(line);
+    })
       .on('start', cmd => {
         console.log(cmd)
       })
